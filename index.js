@@ -126,3 +126,5 @@ const writeJobs = async () => {
 }
   
 writeJobs();
+
+console.log("test")
