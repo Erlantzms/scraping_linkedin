@@ -126,7 +126,3 @@ const writeJobs = async () => {
 }
   
 writeJobs();
-        
-
-
-        
