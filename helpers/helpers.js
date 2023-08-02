@@ -33,6 +33,14 @@ const stringToDate = (str) => {
         case "semana":
             newDate.setDate(now.getDate() - parseInt(number) * 7);
             break;
+        case "meses":
+        case "mes":
+            newDate.setDate(now.getDate() - parseInt(number) * 30);
+            break;
+        case "años":
+        case "año":
+            newDate.setDate(now.getDate() - parseInt(number) * 365);
+            break;
         default:
             throw new Error("Unidad de tiempo desconocida");
     }

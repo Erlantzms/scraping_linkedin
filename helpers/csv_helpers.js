@@ -4,7 +4,7 @@ const writeCsv = async (jobOffers) => {
     const jobsToList = [];
     jobOffers.forEach((jobOffer) => jobsToList.push(Object.values(jobOffer)))
     const csvContent = "id,jobTitle,company,type,remote,link,publication\n" + jobsToList.map(row => row.join(",")).join("\n");
-    await fs.appendFile('output.csv', csvContent, (err) => {
+    await fs.writeFile('output.csv', csvContent, (err) => {
     if (err) {
         console.error('Error writing CSV file:', err);
     } else {
