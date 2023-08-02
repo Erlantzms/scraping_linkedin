@@ -3,10 +3,10 @@ const { cleanId, stringToDate } = require("./helpers/helpers");
 
 let jobOffersFetched = [];
 let existingJobOffers = [];
+const filename = 'output.xlsx'
 
 let jobName = ""
-//let url = `https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=25&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_SEARCH_BUTTON,keywords:${jobName},locationUnion:(geoId:105646813),spellCorrectionEnabled:true)&start=0`
-let headers = {
+const headers = {
     'authority': 'www.linkedin.com',
     'accept': 'application/vnd.linkedin.normalized+json+2.1',
     'accept-language': 'en-US,en;q=0.9,es;q=0.8',
@@ -59,9 +59,7 @@ let searchJobs = async (url) => {
 }
 
 let getNumberOfResults = async (jobname) => {
-    let url = `https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=100&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_SEARCH_BUTTON,keywords:${jobName},locationUnion:(geoId:105646813),spellCorrectionEnabled:true)&start=0`
-
-    const res = await fetch(url, {
+    const res = await fetch(`https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=100&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_SEARCH_BUTTON,keywords:${jobName},locationUnion:(geoId:105646813),spellCorrectionEnabled:true)&start=0`, {
         headers: headers
     });
 
@@ -73,12 +71,12 @@ const orderByDate = (a, b) => {
     return new Date(a.publicationData) - new Date(b.publicationData);
 }
 
-const getUniqueObjectsById = (arr) => {
-    const uniqueObjects = arr.reduce((uniqueArr, obj) => {
-    const existingObject = uniqueArr.find((item) => item.id === obj.id);
-    if (!existingObject) {
-        uniqueArr.push(obj);
-    }
+const getUniqueObjectsById = (jobOffers) => {
+    const uniqueObjects = jobOffers.reduce((uniqueArr, obj) => {
+        const existingObject = uniqueArr.find((item) => item.id === obj.id);
+        if (!existingObject) {
+            uniqueArr.push(obj);
+        }
         return uniqueArr;
     }, []);
   
@@ -90,20 +88,16 @@ const writeJobs = async (jobname) => {
     const numberOfResults = await getNumberOfResults(jobName);
     const numberOfPages = (Math.ceil(numberOfResults.total/numberOfResults.count));
 
-    for (let j = 0; j < numberOfPages; j++) {
+    for (let j = 0; j < Math.min(9, numberOfPages); j++) {
         console.log("page ", j)
         let start = (j + 1) * numberOfResults.count;
         let url = `https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=100&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_SEARCH_BUTTON,keywords:${jobName},locationUnion:(geoId:105646813),spellCorrectionEnabled:true)&start=${start}`
         await searchJobs(url);
     }
-
-    existingJobOffers = await readCsv();
-    console.log("fetched: ", jobOffersFetched.length)
-    console.log("existing: ", existingJobOffers.length)
+    existingJobOffers = await readCsv(filename);
     jobOffersFetched.concat(existingJobOffers)
     const uniqueObjects = getUniqueObjectsById(jobOffersFetched)
-    writeCsv(uniqueObjects.sort(orderByDate));
-    console.log("unique: ", uniqueObjects.length)
+    writeCsv(uniqueObjects.sort(orderByDate).reverse(), filename);
 }
 
 writeJobs("React.js");
