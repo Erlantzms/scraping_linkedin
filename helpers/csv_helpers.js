@@ -24,9 +24,7 @@ const readCsv = async (fileName) => {
             if (files.includes(fileName)) {
                 data = await fs.promises.readFile(`./${fileName}`, { encoding: 'utf8' });  
             } else {
-                console.log(1111)
                 await fs.promises.writeFile(`./${fileName}`, "", () => {});
-                console.log(22222)
                 data = await fs.promises.readFile(`./${fileName}`, { encoding: 'utf8' });  
             }
         }

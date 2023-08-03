@@ -1,5 +1,5 @@
 const { writeCsv, readCsv } = require("./helpers/csv_helpers");
-const { cleanId, stringToDate } = require("./helpers/helpers");
+const { cleanId, stringToDate, orderByDate } = require("./helpers/helpers");
 
 let jobOffersFetched = [];
 let existingJobOffers = [];
@@ -36,7 +36,6 @@ let searchJobs = async (url) => {
         .then((data) => {
             for (let i = 0; i < data.included.length; i++) {
                 if (data.included[i].jobPostingTitle) {
-                    console.log(i)
                     let jobId = cleanId(data.included[i].jobPostingUrn);
                     let jobTitle = data.included[i].jobPostingTitle;
                     let companyName = data.included[i].primaryDescription.text;
@@ -67,10 +66,6 @@ let getNumberOfResults = async (jobname) => {
     return data.data.paging;
 }
 
-const orderByDate = (a, b) => {
-    return new Date(a.publicationData) - new Date(b.publicationData);
-}
-
 const getUniqueObjectsById = (jobOffers) => {
     const uniqueObjects = jobOffers.reduce((uniqueArr, obj) => {
         const existingObject = uniqueArr.find((item) => item.id === obj.id);
@@ -89,7 +84,6 @@ const writeJobs = async (jobname) => {
     const numberOfPages = (Math.ceil(numberOfResults.total/numberOfResults.count));
 
     for (let j = 0; j < Math.min(9, numberOfPages); j++) {
-        console.log("page ", j)
         let start = (j + 1) * numberOfResults.count;
         let url = `https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=100&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_SEARCH_BUTTON,keywords:${jobName},locationUnion:(geoId:105646813),spellCorrectionEnabled:true)&start=${start}`
         await searchJobs(url);
@@ -100,6 +94,18 @@ const writeJobs = async (jobname) => {
     writeCsv(uniqueObjects.sort(orderByDate).reverse(), filename);
 }
 
-writeJobs("React.js");
 
 
+const jobKeys = ["React.js", "JavaScript", "Desarrollador de front-end", "Desarrollo Full Stack"]
+
+const processJobs = async () => {
+    for (let a = 0; a < jobKeys.length; a++) {
+        console.log(`Searching results for "${jobKeys[a]}"...`);
+        await writeJobs(jobKeys[a]);
+        console.log("...");
+    }
+};
+
+processJobs();
+
+3683436931

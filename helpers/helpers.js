@@ -48,7 +48,12 @@ const stringToDate = (str) => {
     return newDate;
 }
 
+const orderByDate = (a, b) => {
+    return new Date(a.publicationData) - new Date(b.publicationData);
+}
+
 module.exports = {
     cleanId: cleanId,
-    stringToDate: stringToDate
+    stringToDate: stringToDate,
+    orderByDate: orderByDate
 }
