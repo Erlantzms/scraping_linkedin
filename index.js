@@ -1,6 +1,6 @@
 const { writeCsv, readCsv } = require("./helpers/csv_helpers");
 const { cleanId, stringToDate, orderByDate } = require("./helpers/helpers");
-
+const axios = require("axios");
 
 let jobOffersFetched = [];
 let existingJobOffers = [];
@@ -30,19 +30,18 @@ const headers = {
   }
 
 let searchJobs = async (url) => {
-    await fetch(url, {
+    await axios.get(url, {
         headers: headers
     })
-        .then(res => res.json())
         .then((data) => {
-            for (let i = 0; i < data.included.length; i++) {
-                if (data.included[i].jobPostingTitle) {
-                    let jobId = cleanId(data.included[i].jobPostingUrn);
-                    let jobTitle = data.included[i].jobPostingTitle;
-                    let companyName = data.included[i].primaryDescription.text;
-                    let typeOfOffer = data.included[i].footerItems[0]?.type;
-                    let isRemote = (data.included[i].secondaryDescription.text).includes("remoto");
-                    let publicationData = data.included[i].secondaryActionsV2[0].dismissJobAction.followUpFeedbackReasons[2].text;
+            for (let i = 0; i < data.data.included.length; i++) {
+                if (data.data.included[i].jobPostingTitle) {
+                    let jobId = cleanId(data.data.included[i].jobPostingUrn);
+                    let jobTitle = data.data.included[i].jobPostingTitle;
+                    let companyName = data.data.included[i].primaryDescription.text;
+                    let typeOfOffer = data.data.included[i].footerItems[0]?.type;
+                    let isRemote = (data.data.included[i].secondaryDescription.text).includes("remoto");
+                    let publicationData = data.data.included[i].secondaryActionsV2[0].dismissJobAction.followUpFeedbackReasons[2].text;
 
                     jobOffersFetched.push({
                         id: jobId,
@@ -59,12 +58,10 @@ let searchJobs = async (url) => {
 }
 
 let getNumberOfResults = async (jobName) => {
-    const res = await fetch(`https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=25&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_OTHER_ENTRY,keywords:${jobName},locationUnion:(geoId:105646813),selectedFilters:(distance:List(25)),spellCorrectionEnabled:true)&start=25`, {
+    const res = await axios.get(`https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=25&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_OTHER_ENTRY,keywords:${jobName},locationUnion:(geoId:105646813),selectedFilters:(distance:List(25)),spellCorrectionEnabled:true)&start=25`, {
         headers: headers
     });
-
-    const data = await res.json();
-    return data.data.paging;
+    return res.data.data.paging;
 }
 
 const getUniqueObjectsById = (jobOffers) => {

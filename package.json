@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.4.0",
     "mitm": "^1.7.2",
     "mitmproxy": "^2.1.2",
+    "node-fetch": "^3.3.2",
     "open": "^9.1.0",
     "puppeteer": "^20.8.2"
   }
