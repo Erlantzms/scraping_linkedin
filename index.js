@@ -109,4 +109,4 @@ const processJobs = async () => {
 
 processJobs();
 
-console.log("test")
+console.log("test2")
