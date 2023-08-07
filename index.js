@@ -62,7 +62,7 @@ const headers = {
 };
 
 let getNumberOfResults = async (jobName) => {
-    const res = await axios.get(`https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=25&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_OTHER_ENTRY,keywords:${jobName},locationUnion:(geoId:105646813),selectedFilters:(distance:List(25)),spellCorrectionEnabled:true)&start=25`, {
+    const res = await axios.get(`https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=100&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_OTHER_ENTRY,keywords:${jobName},locationUnion:(geoId:105646813),selectedFilters:(distance:List(25)),spellCorrectionEnabled:true)&start=25`, {
         headers: headers
     });
     return res.data.data.paging;
@@ -102,15 +102,11 @@ const writeJobs = async (jobname) => {
 const jobKeys = ["React.js", "JavaScript", "Desarrollador de front-end", "Desarrollo Full Stack", "frontend"]
 
 const processJobs = async () => {
-    const promises = jobKeys.map(async (jobKey) => {
-        console.log(`Searching results for "${jobKey}"...`);
-        await writeJobs(jobKey);
+    for (let k = 0; k < jobKeys.length; k++) {
+        console.log(`Searching results for "${jobKeys[k]}"...`);
+        await writeJobs(jobKeys[k]);
         console.log("...");
-    });
-
-    await Promise.all(promises);
+    }
 };
 
 processJobs();
-
-console.log("test2")
