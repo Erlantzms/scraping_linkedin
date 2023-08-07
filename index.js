@@ -1,6 +1,7 @@
 const { writeCsv, readCsv } = require("./helpers/csv_helpers");
 const { cleanId, stringToDate, orderByDate } = require("./helpers/helpers");
 
+
 let jobOffersFetched = [];
 let existingJobOffers = [];
 const filename = 'output.xlsx'
@@ -10,9 +11,9 @@ const headers = {
     'authority': 'www.linkedin.com',
     'accept': 'application/vnd.linkedin.normalized+json+2.1',
     'accept-language': 'en-US,en;q=0.9,es;q=0.8',
-    'cookie': 'bcookie="v=2&76727612-fdbc-4107-8b5e-9a80842c1ee3"; bscookie="v=1&2023071307244303bebc92-cccf-4e7e-85bb-03b97e7b93c6AQGq1FKbQfs7Lm6KhxTkcJd8MFWLJbRF"; timezone=Europe/Madrid; li_theme=light; li_theme_set=app; aam_uuid=83169359972011386344285896844331201458; _gcl_au=1.1.1376634602.1689266805; li_sugr=cd234069-7ab7-42f4-a2f6-9267abd5ca4d; UserMatchHistory=AQJPcUhLG-Xf0QAAAYmwg1l1DTjbwxn77CP1zGmj0Uy4ygm78WIVej-aZkcc1QRHeuwUQGk4B_bZow; AnalyticsSyncHistory=AQJCueth9wRvkwAAAYmwg1l1YxRc7rr2eMUwJmYjrmSOJKFULHWv1ulI41GxOiKxBlwG3O6gCu2d7gf6VZQRlw; lms_ads=AQHAEDHo91l5HwAAAYmwg1p-F6DFYc9MX6A_5PPa5_9xoTwyXoOYMJewYXvpOw6i3iVQwhvbwnLEgsFjlAqypG2PywA5yIHS; lms_analytics=AQHAEDHo91l5HwAAAYmwg1p-F6DFYc9MX6A_5PPa5_9xoTwyXoOYMJewYXvpOw6i3iVQwhvbwnLEgsFjlAqypG2PywA5yIHS; li_alerts=e30=; AMCVS_14215E3D5995C57C0A495C55%40AdobeOrg=1; AMCV_14215E3D5995C57C0A495C55%40AdobeOrg=-637568504%7CMCIDTS%7C19573%7CMCMID%7C83329589582123294734302555319321935993%7CMCAAMLH-1691744075%7C6%7CMCAAMB-1691744075%7C6G1ynYcLPuiQxYZrsz_pkqfLG9yMXBpb2zX5dvJdYQJzPXImdj0y%7CMCOPTOUT-1691146475s%7CNONE%7CvVersion%7C5.1.1%7CMCCIDH%7C1136748357; ln_or=eyI0MzQ2MTM3IjoiZCJ9; li_rm=AQEdb8mQKdkMFgAAAYm_175GqbO9-_dWyKrOP_y_-2RD9Pu0j66bvr59yXblmdqz4fZE-CyiWnspkwM7mrnQK1FoTOWLO3tugy-bU8i8A9Hw-oMeTKDKBtCH614KQydcTYPGVV9t03Sx6EU-cHGRQcSiEOz643-RzEn8dmR0885Wd22wv9cYYmEa2OBxLIizWoM-BnK6PMaV6aAjilNCxYzHSl2CyxMAwhKdt04ad1v28geqwV9aZzljUjewENwYTxXsbuDFOk5P6gXkBtOOSAteC59s-FGtGigkHkVskQV_9ceCXEA-ZoegNiaquw9XvsEJGqF-jXnQJs8_5Rc; li_g_recent_logout=v=1&true; visit=v=1&M; JSESSIONID="ajax:0854168473372495057"; li_gc=MTsyMTsxNjkxMTQwNzQxOzI7MDIxJVLIRRer9XY79r+kOcv6QRyIz3aEwMDlJGwpm6V2sK8=; liap=true; li_at=AQEDARCffQUC9AZvAAABib_YbzYAAAGJ4-TzNk0AxvzhHGnGi9x3fu3ivP4o02q-vSE0sbXbbXUwvJXEJYI7E7l3NB1vROic5F0lpT1cxD93vo-6NmzvLrOjJZXTPnKt-z-BOsaJn9DuulEYyq7OAdBb; lang=v=2&lang=es-es; li_mc=MTsyMTsxNjkxMTQxNjg0OzI7MDIx1S04uYIjqoI4+jfGPKzdKjp2OWaD+CaoaOup/vgfwck=; g_state={"i_p":1691228135096,"i_l":2}; lidc="b=VB85:s=V:r=V:a=V:p=V:g=4873:u=560:x=1:i=1691141745:t=1691178430:v=2:sig=AQGeOdh-VYQiu1vsWJHmo5u39oURm7-z"; sdsc=22%3A1%2C1691141772193%7EJAPP%2C0rdDu4%2FQJgrjMyEF3P%2Bz9El7gU2s%3D',
-    'csrf-token': 'ajax:0854168473372495057',
-    'referer': 'https://www.linkedin.com/jobs/search/?currentJobId=3660125711&distance=25&geoId=105646813&keywords=React.js',
+    'cookie': 'bcookie="v=2&296117d2-c568-46bd-8f2a-abcc5a9b92f1"; bscookie="v=1&20230806110517b5d21803-ff06-47af-82d9-3f1cf95d35a5AQEcXho_DbGU6XRw3aOjG4DZM5s4_Tr_"; li_alerts=e30=; li_gc=MTsyMTsxNjkxMzE5OTI4OzI7MDIxgQRxGcnFrP1O+fOc/DsAHkEqhRcrGME9AYdgXfD04o0=; fid=AQHMQ5leJvgJSQAAAYnKhi98uwgE2yINELDgXB8bKkfJDRh9iVNGPabPwOwX2lhBhsvvIB-TUiht6g; fcookie=AQE1akIWgZuUGwAAAYnKhmZG7NRrLaJ9nwHQ4tCDuETw00wuh66QW8g2OMIrRl3OiuTydcZUNVXu0dz1VevI0leWKW_k8K2wX4gUP-Zue8t-A8a6jBbf4q5tSVF_yjjqVKjl80WrNiljNTtE_SpqEBqlMHZLMqE2f_t2QOrDeRCznJ963vL5ntFmby-rlLF1AviANjg4fMnBM3ROYcUgwTC5wcqshxjxOGIAv4_fAhEkrcKUnw0esltGd5XPLeKm1msJd00J1-PED_xbeJNgBFNRcpwi_2m1YDRXNMyNvyy/eW52bJDkzcn/QZF7+7D/RslYrzggjHJOKF6sWxLRj7CSUH1oydbmK2M1AyoCEkaPD9lqd08KAQ==; li_at=AQEDARCffQUDavJYAAABicqGZsIAAAGJ7pLqwk4AxiZAjenfvfo2BONMwDgdC7SyVMGOoTyegtZMKjbby50m_57xKNcWTgpP9NsPgBHlCQhgt9v1ExeflblRtjeWgJ8BUGHhDLEnaZStfcuraFc94T7m; liap=true; JSESSIONID="ajax:6609962440884506490"; lang=v=2&lang=es-es; timezone=Europe/Madrid; li_theme=light; li_theme_set=app; AMCVS_14215E3D5995C57C0A495C55%40AdobeOrg=1; aam_uuid=07716286014839390524320177903794645206; AMCV_14215E3D5995C57C0A495C55%40AdobeOrg=-637568504%7CMCIDTS%7C19576%7CMCMID%7C07550029005729134474268134636914809629%7CMCAAMLH-1691924767%7C6%7CMCAAMB-1691924767%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1691327167s%7CNONE%7CMCCIDH%7C1136748357%7CvVersion%7C5.1.1; ln_or=eyI0MzQ2MTM3IjoiZCJ9; _gcl_au=1.1.2128369243.1691319968; li_sugr=689cd97c-a745-46bc-acdd-b643c25de54d; UserMatchHistory=AQLBtCQiwLJyBwAAAYnKhqLkaND452okuy1vEf8v6bOcMO8aQ9scME6oUfWiqZelB_1RmS8xOxBzyg; AnalyticsSyncHistory=AQJdBOTNVTcJTwAAAYnKhqLkRU1jYJwqbOYGwNqy5kExMEx6I1SlfUPsa1tGVAs2afoK9K5wJvtURgwKEDNjfg; lms_ads=AQFJQSxhLjccpAAAAYnKhqPMQYLHNm13b-l6B5vTFp5rOO8EzxIQ36k1mSKOgARO4M_cZ2EXRRu6-uwNhNfCJtS4J6eM8DUA; lms_analytics=AQFJQSxhLjccpAAAAYnKhqPMQYLHNm13b-l6B5vTFp5rOO8EzxIQ36k1mSKOgARO4M_cZ2EXRRu6-uwNhNfCJtS4J6eM8DUA; lidc="b=VB85:s=V:r=V:a=V:p=V:g=4883:u=560:x=1:i=1691349966:t=1691435833:v=2:sig=AQH4DNLLcYFwrWFYaNTHYAIbuX3vJY4g"; li_mc=MTsyMTsxNjkxMzQ5OTY3OzI7MDIxyoSYU1OvsTkY5VPEv5azgbYI6ig7sCbgsOklx0Id25o=; sdsc=22%3A1%2C1691349988132%7EJAPP%2C0LySgPivXEtFysZkjSd3aVjdxHAI%3D',
+    'csrf-token': 'ajax:6609962440884506490',
+    'referer': 'https://www.linkedin.com/jobs/search/?currentJobId=3575590568&distance=25&geoId=105646813&keywords=React.js&refresh=true',
     'sec-ch-ua': '"Not/A)Brand";v="99", "Google Chrome";v="115", "Chromium";v="115"',
     'sec-ch-ua-mobile': '?0',
     'sec-ch-ua-platform': '"Windows"',
@@ -21,10 +22,10 @@ const headers = {
     'sec-fetch-site': 'same-origin',
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
     'x-li-lang': 'es_ES',
-    'x-li-page-instance': 'urn:li:page:d_flagship3_search_srp_jobs;yPMTV9PxQV64Vgnm0Im7Kg==',
+    'x-li-page-instance': 'urn:li:page:d_flagship3_search_srp_jobs;0p+AYC9QRSmfPOxlXaOMYA==',
     'x-li-pem-metadata': 'Voyager - Careers=jobs-search-results-prefetch',
     'x-li-prefetch': '1',
-    'x-li-track': '{"clientVersion":"1.13.521","mpVersion":"1.13.521","osName":"web","timezoneOffset":2,"timezone":"Europe/Madrid","deviceFormFactor":"DESKTOP","mpName":"voyager-web","displayDensity":1.125,"displayWidth":1728,"displayHeight":972}',
+    'x-li-track': '{"clientVersion":"1.13.632","mpVersion":"1.13.632","osName":"web","timezoneOffset":2,"timezone":"Europe/Madrid","deviceFormFactor":"DESKTOP","mpName":"voyager-web","displayDensity":1.125,"displayWidth":1728,"displayHeight":972}',
     'x-restli-protocol-version': '2.0.0'
   }
 
@@ -55,13 +56,14 @@ let searchJobs = async (url) => {
                 }
             }
         })
+        .catch((err) => console.log("ERRRRRRORRRRR", err))
 }
 
 let getNumberOfResults = async (jobName) => {
     const res = await fetch(`https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=25&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_OTHER_ENTRY,keywords:${jobName},locationUnion:(geoId:105646813),selectedFilters:(distance:List(25)),spellCorrectionEnabled:true)&start=25`, {
         headers: headers
-      });
-    
+    });
+
     const data = await res.json();
     return data.data.paging;
 }
@@ -74,16 +76,16 @@ const getUniqueObjectsById = (jobOffers) => {
         }
         return uniqueArr;
     }, []);
-  
+
     return uniqueObjects;
-  }
-  
+}
+
 const writeJobs = async (jobname) => {
     jobName = jobname.replaceAll(" ", "%20");
     const numberOfResults = await getNumberOfResults(jobName);
-    const numberOfPages = (Math.ceil(numberOfResults.total/numberOfResults.count));
+    const numberOfPages = (Math.ceil(numberOfResults.total / numberOfResults.count));
 
-    for (let j = 0; j < 9; j++) {
+    for (let j = 0; j < numberOfPages; j++) {
         let start = (j + 1) * numberOfResults.count;
         let url = `https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=100&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_SEARCH_BUTTON,keywords:${jobName},locationUnion:(geoId:105646813),spellCorrectionEnabled:true)&start=${start}`
         await searchJobs(url);
