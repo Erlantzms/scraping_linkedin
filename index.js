@@ -105,13 +105,20 @@ const writeJobs = async (jobname) => {
 const jobKeys = ["React.js", "JavaScript", "Desarrollador de front-end", "Desarrollo Full Stack", "frontend"]
 
 const processJobs = async () => {
-    cookies = await get_cookies();
-    console.log(cookies)
-    // for (let k = 0; k < jobKeys.length; k++) {
-    //     console.log(`Searching results for "${jobKeys[k]}"...`);
-    //     await writeJobs(jobKeys[k]);
-    //     console.log("...");
-    // }
+    for (let k = 0; k < jobKeys.length; k++) {
+        console.log(`Searching results for "${jobKeys[k]}"...`);
+        await writeJobs(jobKeys[k]);
+        console.log("...");
+    }
 };
 
-processJobs();
+// processJobs();
+
+(async() => {
+    try {
+        const cookies = await get_cookies();
+        console.log(cookies);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+})();
