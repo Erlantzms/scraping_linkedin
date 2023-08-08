@@ -1,3 +1,4 @@
+const { get_cookies } = require("./get_headers");
 const { writeCsv, readCsv } = require("./helpers/csv_helpers");
 const { cleanId, stringToDate, orderByDate } = require("./helpers/helpers");
 const axios = require("axios");
@@ -26,9 +27,9 @@ const headers = {
     'x-li-pem-metadata': 'Voyager - Careers=jobs-search-results',
     'x-li-track': '{"clientVersion":"1.13.632","mpVersion":"1.13.632","osName":"web","timezoneOffset":2,"timezone":"Europe/Madrid","deviceFormFactor":"DESKTOP","mpName":"voyager-web","displayDensity":1.125,"displayWidth":1728,"displayHeight":972}',
     'x-restli-protocol-version': '2.0.0'
-  }
+}
 
-  let searchJobs = async (url) => {
+let searchJobs = async (url, continueScraping) => {
     try {
         const response = await axios.get(url, {
             headers: headers
@@ -57,8 +58,9 @@ const headers = {
             }
         }
     } catch (error) {
-        console.error("An error occurred:", error.message);
+        continueScraping = false;
     }
+    return continueScraping;
 };
 
 let getNumberOfResults = async (jobName) => {
@@ -84,12 +86,13 @@ const writeJobs = async (jobname) => {
     jobName = jobname.replaceAll(" ", "%20");
     const numberOfResults = await getNumberOfResults(jobName);
     const numberOfPages = (Math.ceil(numberOfResults.total / numberOfResults.count));
+    let continueScraping = true;
 
-    for (let j = 0; j < numberOfPages; j++) {
+    for (let j = 0; j < numberOfPages && continueScraping; j++) {
         console.log(`page ${j}`)
         let start = (j + 1) * numberOfResults.count;
         let url = `https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-169&count=100&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_SEARCH_BUTTON,keywords:${jobName},locationUnion:(geoId:105646813),spellCorrectionEnabled:true)&start=${start}`
-        await searchJobs(url);
+        continueScraping = await searchJobs(url, continueScraping); // Pasar y recibir el valor de continueScraping
     }
     existingJobOffers = await readCsv(filename);
     jobOffersFetched.concat(existingJobOffers)
@@ -102,11 +105,13 @@ const writeJobs = async (jobname) => {
 const jobKeys = ["React.js", "JavaScript", "Desarrollador de front-end", "Desarrollo Full Stack", "frontend"]
 
 const processJobs = async () => {
-    for (let k = 0; k < jobKeys.length; k++) {
-        console.log(`Searching results for "${jobKeys[k]}"...`);
-        await writeJobs(jobKeys[k]);
-        console.log("...");
-    }
+    cookies = await get_cookies();
+    console.log(cookies)
+    // for (let k = 0; k < jobKeys.length; k++) {
+    //     console.log(`Searching results for "${jobKeys[k]}"...`);
+    //     await writeJobs(jobKeys[k]);
+    //     console.log("...");
+    // }
 };
 
 processJobs();
