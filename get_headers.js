@@ -1,14 +1,16 @@
+require('dotenv').config();
 const puppeteer = require('puppeteer');
 
 const get_cookies = (async () => {
-  const browser = await puppeteer.launch({headless: true});
+  const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox'] });
+
   const page = await browser.newPage();
   
   await page.goto('https://www.linkedin.com/login/es?fromSignIn=true&amp;trk=guest_homepage-basic_nav-header-signin');
 
   await page.waitForTimeout(2000);
-  await page.type('#username', 'erlantzms@gmail.com')
-  await page.type('#password', 'caracola3227')
+  await page.type('#username', process.env.USER_USERNAME)
+  await page.type('#password', process.env.USER_PASSWORD)
   
   await page.waitForTimeout(2000);
   await page.click('button.btn__primary--large');
