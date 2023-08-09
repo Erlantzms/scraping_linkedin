@@ -93,15 +93,14 @@ const writeJobs = async (jobname, headers) => {
     let continueScraping = true;
 
     for (let j = 0; j < numberOfPages && continueScraping; j++) {
-        console.log(`page ${j}`);
         let start = (j + 1) * numberOfResults.count;
         let url = `https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-170&count=100&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_JOB_FILTER,keywords:${jobName},locationUnion:(geoId:105646813),selectedFilters:(sortBy:List(DD),distance:List(25)),spellCorrectionEnabled:true)&start=${start}`;
         continueScraping = await searchJobs(url, continueScraping, headers);
     }
     existingJobOffers = await readCsv(filename);
-    jobOffersFetched.concat(existingJobOffers);
+    jobOffersFetched = jobOffersFetched.concat(existingJobOffers); // Asignar el resultado de la concatenación
     const uniqueObjects = getUniqueObjectsById(jobOffersFetched);
-    writeCsv(uniqueObjects.sort(orderByDate).reverse(), filename);
+    await writeCsv(uniqueObjects.sort(orderByDate).reverse(), filename);
 
     return uniqueObjects.sort(orderByDate).reverse();
 }
@@ -109,7 +108,7 @@ const writeJobs = async (jobname, headers) => {
 const jobKeys = ["React.js", "JavaScript", "Desarrollador de front-end", "Desarrollo Full Stack", "frontend"];
 
 const processJobs = async () => {
-    const cookies = await get_cookies();
+    // const cookies = await get_cookies();
     // headers = setHeaders(cookies);
     headers = {
         'authority': 'www.linkedin.com',
@@ -132,13 +131,18 @@ const processJobs = async () => {
         'x-li-track': '{"clientVersion":"1.13.830","mpVersion":"1.13.830","osName":"web","timezoneOffset":2,"timezone":"Europe/Madrid","deviceFormFactor":"DESKTOP","mpName":"voyager-web","displayDensity":1.125,"displayWidth":1728,"displayHeight":972}',
         'x-restli-protocol-version': '2.0.0'
       };
-    let data = []
+
+    let data = [];
+
     for (let k = 0; k < jobKeys.length; k++) {
         console.log(`Searching results for "${jobKeys[k]}"...`);
         let searchedData = await writeJobs(jobKeys[k], headers);
         data.push(searchedData);
     }
-    return data
+
+    data = data.flat(1);
+
+    return data;
 };
 
 module.exports = {
