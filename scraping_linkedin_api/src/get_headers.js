@@ -9,8 +9,8 @@ const get_cookies = (async () => {
   await page.goto('https://www.linkedin.com/login/es?fromSignIn=true&amp;trk=guest_homepage-basic_nav-header-signin');
 
   await page.waitForTimeout(2000);
-  await page.type('#username', process.env.USER_USERNAME)
-  await page.type('#password', process.env.USER_PASSWORD)
+  await page.type('#username', process.env.USER_USERNAME);
+  await page.type('#password', process.env.USER_PASSWORD);
   
   await page.waitForTimeout(2000);
   await page.click('button.btn__primary--large');
