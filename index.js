@@ -8,8 +8,9 @@ const app = express()
 //   next()})
 
 // // Define route for GET request on path '/'
-app.get('/', async (request, response) => {
+app.get('/data', async (request, response) => {
 //   const data = await processJobs()
+  console.log("dataaaaaaa")
   response.send({data:"data"});
 });
 

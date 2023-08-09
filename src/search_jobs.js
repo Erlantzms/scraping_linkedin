@@ -106,7 +106,8 @@ const writeJobs = async (jobname, headers) => {
     return uniqueObjects.sort(orderByDate).reverse();
 }
 
-const jobKeys = ["React.js", "JavaScript", "Desarrollador de front-end", "Desarrollo Full Stack", "frontend"];
+// const jobKeys = ["React.js", "JavaScript", "Desarrollador de front-end", "Desarrollo Full Stack", "frontend"];
+const jobKeys = ["React.js"];
 
 const processJobs = async () => {
     const cookies = await get_cookies();
@@ -116,8 +117,8 @@ const processJobs = async () => {
         console.log(`Searching results for "${jobKeys[k]}"...`);
         let searchedData = await writeJobs(jobKeys[k], headers);
         data.push(searchedData);
-        console.log("...");
     }
+    console.log("Data processed");
     return data
 };
 
