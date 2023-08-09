@@ -2,7 +2,7 @@ require('dotenv').config();
 const puppeteer = require('puppeteer');
 
 const get_cookies = (async () => {
-  const browser = await puppeteer.launch({headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreDefaultArgs: ['--disable-extensions'] });
+  const browser = await puppeteer.launch({headless: "new", args: ['--no-sandbox', '--disable-setuid-sandbox'], ignoreDefaultArgs: ['--disable-extensions'] });
 
   const page = await browser.newPage();
   
@@ -16,12 +16,21 @@ const get_cookies = (async () => {
   await page.click('button.btn__primary--large');
   await page.waitForTimeout(5000);
 
-  const cookies = await page.cookies();
+  const client = await page.target().createCDPSession();
+  const cookies = (await client.send('Network.getAllCookies')).cookies;
   await page.waitForTimeout(2000);
-
   await browser.close();
 
-  return cookies
+  const filteredCookies = cookies.filter(cookie => {
+    return cookie.name === 'bcookie' || cookie.name === 'bscookie' || cookie.name === 'li_alerts' || cookie.name === 'li_gc' || cookie.name === 'JSESSIONID' || cookie.name === 'lang' || cookie.name === 'lidc'
+  });
+
+  const result = {};
+  filteredCookies.forEach(cookie => {
+    result[cookie.name] = cookie.value;
+  });
+
+  return result;
 });
 
 module.exports = {
