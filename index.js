@@ -9,8 +9,8 @@ const app = express()
 
 // // Define route for GET request on path '/'
 app.get('/', async (request, response) => {
-  const data = await processJobs()
-  response.send(data);
+//   const data = await processJobs()
+  response.send({data:"data"});
 });
 
 // // Start the server on port 3000
