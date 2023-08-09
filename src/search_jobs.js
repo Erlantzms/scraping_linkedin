@@ -98,7 +98,7 @@ const writeJobs = async (jobname, headers) => {
         continueScraping = await searchJobs(url, continueScraping, headers);
     }
     existingJobOffers = await readCsv(filename);
-    jobOffersFetched = jobOffersFetched.concat(existingJobOffers); // Asignar el resultado de la concatenación
+    jobOffersFetched.concat(existingJobOffers);
     const uniqueObjects = getUniqueObjectsById(jobOffersFetched);
     await writeCsv(uniqueObjects.sort(orderByDate).reverse(), filename);
 
@@ -131,18 +131,14 @@ const processJobs = async () => {
         'x-li-track': '{"clientVersion":"1.13.830","mpVersion":"1.13.830","osName":"web","timezoneOffset":2,"timezone":"Europe/Madrid","deviceFormFactor":"DESKTOP","mpName":"voyager-web","displayDensity":1.125,"displayWidth":1728,"displayHeight":972}',
         'x-restli-protocol-version': '2.0.0'
       };
-
-    let data = [];
-
+    let data = []
     for (let k = 0; k < jobKeys.length; k++) {
         console.log(`Searching results for "${jobKeys[k]}"...`);
         let searchedData = await writeJobs(jobKeys[k], headers);
         data.push(searchedData);
+        data = searchedData.flat(1);
     }
-
-    data = data.flat(1);
-
-    return data;
+    return data
 };
 
 module.exports = {
