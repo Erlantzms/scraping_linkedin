@@ -1,11 +1,7 @@
 const express = require('express');
 const { processJobs } = require('./src/search_jobs');
 const app = express()
-
-// // Define middleware for all routes
-// app.use((request, response, next) => {
-//   console.log(request)
-//   next()})
+const port = process.env.PORT || 3000;
 
 // // Define route for GET request on path '/'
 app.get('/data', async (request, response) => {
@@ -15,6 +11,4 @@ app.get('/data', async (request, response) => {
 });
 
 // // Start the server on port 3000
-app.listen(
-   3000, 
-   () => console.log(`Server listening on port 3000.`));
+app.listen(port, "0.0.0.0", () => console.log(`Server listening on port 3000.`));
