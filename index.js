@@ -1,6 +1,6 @@
 const express = require('express');
 const { processJobs } = require('./src/search_jobs');
-const app = express()
+const app = express();
 const port = process.env.PORT || 3000;
 
 app.get('/data', async (request, response) => {
