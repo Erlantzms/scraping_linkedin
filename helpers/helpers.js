@@ -49,7 +49,7 @@ const stringToDate = (str) => {
 }
 
 const orderByDate = (a, b) => {
-    return new Date(a.publicationData) - new Date(b.publicationData);
+    return new Date(a.publicationDate) - new Date(b.publicationDate);
 }
 
 module.exports = {

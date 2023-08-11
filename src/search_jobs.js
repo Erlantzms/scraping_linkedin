@@ -33,7 +33,7 @@ let setHeaders = (cookies) => {
       }
 }
 
-let searchJobs = async (url, continueScraping, headers) => {
+let searchJobs = async (url, continueScraping, headers, jobname) => {
     try {
         const response = await axios.get(url, {
             headers: headers
@@ -47,7 +47,7 @@ let searchJobs = async (url, continueScraping, headers) => {
                     let companyName = response.data.included[i].primaryDescription.text;
                     let typeOfOffer = response.data.included[i].footerItems[0]?.type;
                     let isRemote = (response.data.included[i].secondaryDescription.text).includes("remoto");
-                    let publicationData = response.data.included[i].secondaryActionsV2[0].dismissJobAction.followUpFeedbackReasons[2].text;
+                    let publicationDate = response.data.included[i].secondaryActionsV2[0].dismissJobAction.followUpFeedbackReasons[2].text;
 
                     jobOffersFetched.push({
                         id: jobId,
@@ -56,7 +56,8 @@ let searchJobs = async (url, continueScraping, headers) => {
                         type: typeOfOffer,
                         remote: isRemote,
                         link: `https://www.linkedin.com/jobs/view/${jobId}`,
-                        publicationData: stringToDate(publicationData)
+                        publicationDate: stringToDate(publicationDate),
+                        jobname: jobname
                     });
                 }
             }
@@ -95,7 +96,7 @@ const writeJobs = async (jobname, headers) => {
     for (let j = 0; j < numberOfPages && continueScraping; j++) {
         let start = (j + 1) * numberOfResults.count;
         let url = `https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-170&count=100&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_JOB_FILTER,keywords:${jobName},locationUnion:(geoId:105646813),selectedFilters:(sortBy:List(DD),distance:List(25)),spellCorrectionEnabled:true)&start=${start}`;
-        continueScraping = await searchJobs(url, continueScraping, headers);
+        continueScraping = await searchJobs(url, continueScraping, headers, jobname);
     }
     existingJobOffers = await readCsv(filename);
     jobOffersFetched.concat(existingJobOffers);
