@@ -4,6 +4,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.get('/data', async (request, response) => {
+    res.header("Access-Control-Allow-Origin", "*");
     console.log(`${Date(Date.now())} Searching for results`)
     const data = await processJobs()
     console.log(`${Date(Date.now())} Data processed`)
