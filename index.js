@@ -10,4 +10,10 @@ app.get('/data', async (request, response) => {
     response.send(data);
 });
 
+app.get('/data2', async (request, response) => {
+    console.log(`${Date(Date.now())} Searching for results`)
+    const data = {a:1, b:2, c:3}
+    response.send(data);
+});
+
 app.listen(port, "0.0.0.0", () => console.log(`Server listening on port ${port}.`));
